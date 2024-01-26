@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipes without Specific Product</title>
+</head>
+<body>
+    <h1>Recipes without Specific Product</h1>
+    <table border="1">
+        <tr>
+            <th>Recipe ID</th>
+            <th>Recipe Name</th>
+        </tr>
+        {% for recipe in recipes %}
+        <tr>
+            <td>{{ recipe.id }}</td>
+            <td>{{ recipe.name }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No recipes found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
