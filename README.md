@@ -1,3 +1,5 @@
+### Приложение поварской книги на Django
+
 ### Установка
 Клонируйте репозиторий https://github.com/NadinKon/CulinaryCompanion.git <br>
 
@@ -5,7 +7,7 @@
 pip install -r requirements.txt
 
 
-**Создайте и примените миграции и админа** <br>
+**Создайте и примените миграции** <br>
 python manage.py makemigrations <br>
 python manage.py migrate 
 
@@ -18,4 +20,4 @@ python manage.py runserver
 
 Тестировать можно по адресу: <br>
 http://127.0.0.1:8000/admin <br>
-<br>
+http://127.0.0.1:8000/show_recipes_without_product <br>
