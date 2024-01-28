@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db import transaction
+from django.db.models import F
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Recipe, Product, RecipeProduct
@@ -34,11 +36,10 @@ def cook_recipe(request):
     if request.method == 'POST':
         try:
             recipe_id = request.POST.get('recipe_id')
-            recipe = Recipe.objects.get(id=recipe_id)
 
-            for product in recipe.products.all():
-                product.times_cooked += 1
-                product.save()
+            with transaction.atomic():
+                recipe = Recipe.objects.select_for_update().get(id=recipe_id)
+                recipe.products.all().update(times_cooked=F('times_cooked') + 1)
 
             return JsonResponse({
                 "status": "success",
@@ -49,14 +50,10 @@ def cook_recipe(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
     else:
-
         return render(request, 'cook_recipe.html')
 
 
-def show_recipes_without_product(request):
-    product_id = request.GET.get('product_id')
+def show_recipes_without_product(request, product_id):
     recipes = Recipe.objects.exclude(
-        products__id=product_id,
-        recipeproduct__weight__gte=10
-    )
+        recipeproduct__product_id=product_id, recipeproduct__weight__gte=10)
     return render(request, 'show_recipes_without_product.html', {'recipes': recipes})
